@@ -16,5 +16,8 @@ COPY . .
 # Exposition du port utilisé par l'API
 EXPOSE 3000
 
+# Créer un volume pour les logs
+VOLUME /usr/src/app/logs
+
 # Commande pour démarrer l'application
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

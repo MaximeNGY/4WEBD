@@ -1,0 +1,2 @@
+2025-03-28T18:23:20.359Z [ERROR]: ❌ Erreur d'inscription : Operation `users.findOne()` buffering timed out after 10000ms
+2025-03-28T18:28:20.224Z [ERROR]: ❌ Erreur d'inscription : User validation failed: name: Path `name` is required.

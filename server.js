@@ -1,36 +1,37 @@
-const mongoose = require("mongoose");
+import express from "express";
+import { config } from "dotenv";
+import logger from "./config/logger.js";
+import connectDB from "./config/db.js";
+import mongoose from "mongoose";
 
-const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/concertdb";
+// Charger les variables d'environnement
+config();
 
-mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ MongoDB connecté avec succès"))
-  .catch((err) => console.error("❌ Erreur de connexion à MongoDB :", err));
+// Connexion à MongoDB
+mongoose.connect(process.env.MONGO_URI)
+
+const app = express();
+app.use(express.json()); // Middleware pour parser le JSON
 
 
-  const express = require("express");
-  const dotenv = require("dotenv");
-  const connectDB = require("./config/db");
-  
-  dotenv.config(); // Charger les variables d'environnement
-  
-  connectDB(); // Connexion à MongoDB
-  
-  const app = express();
-  app.use(express.json()); // Middleware pour parser le JSON
-  
-  // Route de test
-  app.get("/", (req, res) => {
-    res.send("🚀 API en ligne !");
-  });
-  
-  // Importer et utiliser les routes
-  const eventRoutes = require("./routes/events");
-  const userRoutes = require("./routes/users");
-  
-  app.use("/api/events", eventRoutes);
-  app.use("/api/users", userRoutes);
-  
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`));
-  
+// Route de test
+app.get("/", (req, res) => {
+  res.send("🚀 API en ligne !");
+});
+
+// Importer et utiliser les routes
+import eventRoutes from "./routes/events.js";
+import userRoutes from "./routes/users.js";
+import authRoutes from "./routes/auth.js";
+
+app.use("/api/events", eventRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => logger.info(`🚀 Serveur démarré sur http://localhost:${PORT}`));
+
+app.use((err, req, res, next) => {
+  logger.error(`❌ Erreur : ${err.message}`);
+  res.status(500).json({ message: "Erreur interne du serveur" });
+});
