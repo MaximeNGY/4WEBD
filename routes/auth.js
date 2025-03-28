@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 const router = express.Router();
 import logger from "../config/logger.js";
+import authMiddleware from "../middlewares/auth.js";
+import roleMiddleware from "../middlewares/role.js";
 
 // Inscription
 router.post('/register', async (req, res) => {
@@ -70,4 +72,13 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Route test pour voir si l'auth fonctionne
+router.get('/protected', authMiddleware, (req, res) => {
+    res.json({ message: `Bravo, ${req.user.id} ! Tu as accès à cette route sécurisée 🚀` });
+  });
+
+// Exemple de route protégée réservée aux admins
+router.get('/admin', authMiddleware, roleMiddleware('admin'), (req, res) => {
+    res.json({ message: "Bienvenue sur la page d'administration 👑" });
+  });
 export default router;
