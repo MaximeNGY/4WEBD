@@ -2,30 +2,51 @@ import jwt from 'jsonwebtoken';
 import logger from '../config/logger.js';
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization'); // Récupérer le token
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  console.log("🔎 Token reçu : ", token);
+
   if (!token) {
     logger.warn("🚫 Accès refusé : aucun token fourni");
     return res.status(401).json({ message: "Accès refusé. Aucun token fourni." });
   }
 
-  // Supprimer le préfixe "Bearer " et récupérer uniquement le token
-  const tokenWithoutBearer = token.split(' ')[1];
-  if (!tokenWithoutBearer) {
-    logger.error("❌ Format du token invalide.");
-    return res.status(401).json({ message: 'Format du token invalide.' });
-  }
-
   try {
-    const decoded = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET); // Vérifier le token
-    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token :", decoded);
     req.user = decoded;
-    logger.info(`✅ Token valide : utilisateur ${req.user.id}`);
-    next(); // Passer à la prochaine étape
-  } catch (err) {
-    logger.error("❌ Token invalide ou expiré");
-    logger.info(`Token reçu : ${token}`); 
-    res.status(401).json({ message: "Token invalide." });
+    console.log("📌 Utilisateur extrait du token :", req.user);
+
+    // ✅ Correction : Utiliser `req.user` au lieu de `user`
+    console.log("📌 Utilisateur extrait du token :", req.user);
+    console.log("📌 Role de l'utilisateur extrait :", req.user?.role);
+
+    next();
+  } catch (e) {
+    logger.error("❌ Erreur lors de la vérification du token : " + e.message);
+    return res.status(401).send({ error: 'Token invalide ou expiré' });
   }
 };
 
-export default authMiddleware;
+
+// Middleware pour vérifier le rôle de l'utilisateur
+const verifyRole = (allowedRoles) => (req, res, next) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    return res.status(401).json({ message: "Accès refusé" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    console.log("📌 Décodage du token : ", decoded);
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Accès interdit" });
+    }
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Token invalide" });
+  }
+};
+
+export { authMiddleware, verifyRole };

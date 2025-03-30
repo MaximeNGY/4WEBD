@@ -13,7 +13,6 @@ services:
       JWT_SECRET: "super_secret_key"
     volumes:
       - .:/app
-      - /app/node_modules
       - ./logs:/usr/src/app/logs
 
   mongo:

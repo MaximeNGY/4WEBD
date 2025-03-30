@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 const router = express.Router();
 import logger from "../config/logger.js";
-import authMiddleware from "../middlewares/auth.js";
+import { authMiddleware} from '../middlewares/auth.js';
 import roleMiddleware from "../middlewares/role.js";
 
 // Inscription

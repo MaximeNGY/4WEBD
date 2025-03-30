@@ -1,26 +1,28 @@
-import { Router } from "express";
-import Event from "../models/Event.js";
-const router = Router();
+import express from "express";
+import { verifyRole } from "../middlewares/auth.js"; // Auth Middleware
+import {
+  createEvent,
+  getEvent,
+  getAllEvents,
+  updateEvent,
+  deleteEvent
+} from "../controllers/eventController.js";
 
-// Route GET all events
-router.get("/", async (req, res) => {
-  try {
-    const events = await Event.find();
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+const router = express.Router();
 
-// Route POST create event
-router.post("/", async (req, res) => {
-  try {
-    const newEvent = new Event(req.body);
-    await newEvent.save();
-    res.status(201).json(newEvent);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+// Lire tous les événements (accessible à tous)
+router.get("/", getAllEvents);
+
+// Lire un événement spécifique (accessible à tous)
+router.get("/:id", getEvent);
+
+// Créer un événement (accessible uniquement à eventCreator ou admin)
+router.post("/", verifyRole(['eventCreator', 'admin']), createEvent);
+
+// Mettre à jour un événement (accessible uniquement à eventCreator ou admin)
+router.put("/:id", verifyRole(['eventCreator', 'admin']), updateEvent);
+
+// Supprimer un événement (accessible uniquement à admin)
+router.delete("/:id", verifyRole(['admin']), deleteEvent);
 
 export default router;
