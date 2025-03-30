@@ -1,8 +1,0 @@
-2025-03-28T18:13:13.304Z [INFO]: 🚀 Serveur démarré sur http://localhost:5000
-2025-03-28T18:19:14.132Z [INFO]: 🚀 Serveur démarré sur http://localhost:5000
-2025-03-28T18:23:02.991Z [INFO]: 🚀 Serveur démarré sur http://localhost:5000
-2025-03-28T18:23:10.346Z [INFO]: 📩 Inscription de john@example.com
-2025-03-28T18:23:20.359Z [ERROR]: ❌ Erreur d'inscription : Operation `users.findOne()` buffering timed out after 10000ms
-2025-03-28T18:28:16.508Z [INFO]: 🚀 Serveur démarré sur http://localhost:5000
-2025-03-28T18:28:20.209Z [INFO]: 📩 Inscription de john@example.com
-2025-03-28T18:28:20.224Z [ERROR]: ❌ Erreur d'inscription : User validation failed: name: Path `name` is required.
