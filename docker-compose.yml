@@ -14,6 +14,7 @@ services:
     volumes:
       - .:/app
       - ./logs:/usr/src/app/logs
+    command: ["node", "config/initDb.js"]
 
   mongo:
     image: mongo:latest
