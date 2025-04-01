@@ -1,10 +1,12 @@
 import express from "express";
+import swaggerSetup from "./swaggerConfig.js";
 import dotenv from 'dotenv';
 import logger from "./config/logger.js";
 import connectDB from './config/db.js';
 
 // Importer et utiliser les routes
 import eventRoutes from "./routes/events.js";
+import ticketRoutes from "./routes/tickets.js";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
 
@@ -17,6 +19,9 @@ connectDB();
 const app = express();
 app.use(express.json()); // Middleware pour parser le JSON
 
+// Configuration Swagger
+swaggerSetup(app);
+
 // Route de test
 app.get("/", (req, res) => {
   res.send("🚀 API en ligne !");
@@ -25,6 +30,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/events", eventRoutes);
+app.use("/api/tickets", ticketRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 

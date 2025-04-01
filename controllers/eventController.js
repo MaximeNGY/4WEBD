@@ -29,7 +29,7 @@ export const getEvent = async (req, res) => {
 
 // Créer un nouvel événement
 export const createEvent = async (req, res) => {
-  const { name,description, date, location, maxSeats, availableSeats } = req.body;
+  const { name,description, date, location, maxSeats, availableSeats, price } = req.body;
   try {
     const event = new Event({
       name,
@@ -38,6 +38,7 @@ export const createEvent = async (req, res) => {
       location,
       maxSeats,
       availableSeats,
+      price,
       createdBy: req.user.id,
     });
 
@@ -63,9 +64,11 @@ export const updateEvent = async (req, res) => {
     }
 
     event.name = req.body.name || event.name;
+    event.description = req.body.description || event.description;
     event.date = req.body.date || event.date;
     event.location = req.body.location || event.location;
-    event.capacity = req.body.capacity || event.capacity;
+    event.maxSeats = req.body.maxSeats || event.maxSeats;
+    event.availableSeats = req.body.availableSeats || event.availableSeats;
     event.price = req.body.price || event.price;
 
     await event.save();

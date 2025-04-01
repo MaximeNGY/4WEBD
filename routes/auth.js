@@ -8,7 +8,32 @@ import logger from "../config/logger.js";
 import { authMiddleware} from '../middlewares/auth.js';
 import roleMiddleware from "../middlewares/role.js";
 
-// Inscription
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Permet de créer son compte
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Créer un utilisateurs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   pseudo:
+ *                     type: string
+ *                     example: "John Thunder"
+ *                   email:
+ *                     type: string
+ *                     example: "john.thunder@mail.com"
+ *                   password:
+ *                     type: string
+ *                     example: "password"
+ */
 router.post('/register', async (req, res) => {
   try {
     const { email, pseudo, password } = req.body;
@@ -34,7 +59,29 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Connexion
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Permet de se connecter
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Retourne un token de connexion
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   email:
+ *                     type: string
+ *                     example: "john.thunder@mail.com"
+ *                   password:
+ *                     type: string
+ *                     example: "password"
+ */
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;

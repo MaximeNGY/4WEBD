@@ -58,7 +58,8 @@ describe("Test Event Routes", () => {
         date: "2025-06-20T20:00:00Z",
         location: "Salle XYZ, Arena Paris",
         maxSeats: 200,
-        availableSeats: 15
+        availableSeats: 15,
+        price: 50
       });
 
     expect(res.statusCode).toBe(201);
@@ -75,6 +76,7 @@ describe("Test Event Routes", () => {
         name: "Updated Concert Test",
         date: "2025-06-22T20:00:00Z",
         location: "Salle ABC",
+        price: 70
       });
 
     expect(res.statusCode).toBe(200);

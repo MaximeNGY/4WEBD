@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 // Définir le schéma pour l'événement
 const eventSchema = new mongoose.Schema(
@@ -31,9 +31,14 @@ const eventSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    price: {
+      type: Number,
+      required: true,
+      min: 0, // Un prix ne peut pas être négatif
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
   },
@@ -41,6 +46,6 @@ const eventSchema = new mongoose.Schema(
 );
 
 // Créer et exporter le modèle
-const Event = mongoose.model('Event', eventSchema);
+const Event = mongoose.model("Event", eventSchema);
 
 export default Event;

@@ -14,9 +14,7 @@ const authMiddleware = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded token :", decoded);
     req.user = decoded;
-    console.log("📌 Utilisateur extrait du token :", req.user);
-
-    // ✅ Correction : Utiliser `req.user` au lieu de `user`
+    
     console.log("📌 Utilisateur extrait du token :", req.user);
     console.log("📌 Role de l'utilisateur extrait :", req.user?.role);
 
