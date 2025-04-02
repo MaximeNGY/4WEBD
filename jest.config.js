@@ -5,6 +5,7 @@ dotenv.config({ path: './.env.test' });
 
 export default {
   globalSetup: './tests/globalSetup.js',
+  globalTeardown: "./tests/globalTeardown.js",
   testEnvironment: 'node',
   transform: {
     "^.+\\.(js|jsx|mjs|cjs)$": "babel-jest",

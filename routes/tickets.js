@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware } from "../middlewares/auth.js";
+import { authMiddleware, verifyRole } from "../middlewares/auth.js";
 import { getMyTickets, getEventTickets, getAllTickets, buyTicket } from "../controllers/ticketController.js";
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const router = express.Router();
  *     summary: Ajoute un tickets dans la BDD et décompte les places disponibles
  *     tags: [Tickets]
  *     responses:
- *       200:
+ *       201:
  *         description: Créer un tickets
  *         content:
  *           application/json:
@@ -136,7 +136,7 @@ router.get("/mine", authMiddleware, getMyTickets); // Tickets de l'utilisateur
  *                     format: date-time
  *                     example: "2025-04-01T18:38:19.519Z"
  */
-router.get("/event/:eventId", authMiddleware, getEventTickets); // Tickets d'un événement (EventCreator)
+router.get("/event/:eventId", verifyRole(['eventCreator']), getEventTickets); // Tickets d'un événement (EventCreator)
 
 /**
  * @swagger
@@ -197,6 +197,6 @@ router.get("/event/:eventId", authMiddleware, getEventTickets); // Tickets d'un 
  *       403:
  *         description: Accès refusé (non admin)
  */
-router.get("/all", authMiddleware, getAllTickets); // Tous les tickets (Admin)
+router.get("/all", verifyRole(['admin']), getAllTickets); // Tous les tickets (Admin)
 
 export default router;

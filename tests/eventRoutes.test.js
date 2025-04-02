@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import app from '../server.js';
-import mongoose from 'mongoose';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
@@ -11,7 +10,6 @@ let eventId;
 
 // Avant les tests, créer les utilisateurs et récupérer les tokens
 beforeAll(async () => {
-  process.env.NODE_ENV = 'test';
 
   // Trouver les utilisateurs ou les créer
   const admin = await User.findOne({ email: 'admin@test.com' }).select("+role");
@@ -29,22 +27,13 @@ beforeAll(async () => {
   api = supertest(app);
 });
 
-// Après les tests, fermer la connexion à la base de données
-afterAll(async () => {
-  if (mongoose.connection.db) {
-    await mongoose.connection.db.dropDatabase(); 
-  }
-
-  await mongoose.connection.close();
-});
-
 describe("Test Event Routes", () => {
 
   // Test pour la route GET /api/events
   it("should get all events", async () => {
     const res = await api.get("/api/events");
     expect(res.statusCode).toBe(200);
-    expect(res.body).toBeInstanceOf(Array); // On vérifie que la réponse est un tableau
+    expect(res.body).toBeInstanceOf(Array);
   });
 
   // Test pour la route POST /api/events (création d'événement) en tant qu'eventCreator

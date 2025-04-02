@@ -30,7 +30,9 @@ export const getEventTickets = async (req, res) => {
     }
 
     const tickets = await Ticket.find({ event: req.params.eventId }).populate("user", "email");
-    res.json(tickets);
+
+    res.status(200).json(tickets);
+    
   } catch (error) {
     logger.error(error);
     res.status(500).json({ message: "Erreur serveur" });
