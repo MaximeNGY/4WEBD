@@ -20,4 +20,4 @@ EXPOSE 5000
 VOLUME /usr/src/app/logs
 
 # Commande pour démarrer l'application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

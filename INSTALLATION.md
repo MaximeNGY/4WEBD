@@ -10,6 +10,7 @@ Lien de la docs Swagger: [localhost:5000/api-docs](localhost:5000/api-docs)
 
 ```sh
 git clone https://github.com/MaximeNGY/4WEBD
+cd 4WEBD
 docker-compose up --build -d
 ```
 **Ne pas oublier de créer le .env à la racine du projet.**
