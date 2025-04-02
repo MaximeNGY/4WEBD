@@ -5,8 +5,8 @@ services:
     build: .
     container_name: backend1
     environment:
-      MONGO_URI: mongodb://mongo:27017/concertdb
-      JWT_SECRET: "super_secret_key"
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - .:/app
       - ./logs:/usr/src/app/logs
