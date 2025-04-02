@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Exposition du port utilisé par l'API
-EXPOSE 3000
+EXPOSE 5000
 
 # Créer un volume pour les logs
 VOLUME /usr/src/app/logs
