@@ -79,8 +79,6 @@ export default async () => {
     }).save(); 
   }
 
-  
-
   console.log('✅ Données de test créés avec succès.');
   console.log('Base de données de test connectée');
   console.log("NODE_ENV:", process.env.NODE_ENV);

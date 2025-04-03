@@ -1,11 +1,8 @@
-import supertest from 'supertest';
-import app from '../server.js';
 import User from '../models/User.js';
 import Event from '../models/Event.js';
 import Ticket from '../models/Ticket.js';
 import jwt from 'jsonwebtoken';
 
-let api;
 let adminToken;
 let userToken;
 let eventCreatorToken;
@@ -21,7 +18,7 @@ beforeAll(async () => {
   const TestEvent = await Event.findOne({ name: 'TestEventName' }).select("+role");
   const TestTicket = await Ticket.findOne({ event: TestEvent._id, user: user._id}).select("+role");
 
-  if (!admin || !user || !TestEvent) {
+  if (!admin || !user || !TestEvent || !TestTicket) {
     throw new Error("⚠️ Les utilisateurs de test ne sont pas trouvés !");
   }
 
@@ -31,16 +28,13 @@ beforeAll(async () => {
   eventCreatorToken = jwt.sign({ id: eventCreator._id, role: eventCreator.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
   eventId= TestEvent._id;
-
-  // Lancer le serveur de test
-  api = supertest(app);
 });
 
 // 🧪 TESTS TICKETS
 describe("🧪 Test des routes Tickets", () => {
   
     it("✅ Achat d'un ticket (utilisateur authentifié)", async () => {
-      const res = await api
+      const res = await global.api
         .post("/api/tickets/buy")
         .set("Authorization", `Bearer ${userToken}`)
         .send({
@@ -52,7 +46,7 @@ describe("🧪 Test des routes Tickets", () => {
     });
   
     it("❌ Achat d'un ticket sans token", async () => {
-      const res = await api.post("/api/tickets/buy").send({
+      const res = await global.api.post("/api/tickets/buy").send({
         eventId: eventId,
         quantity: 2,
       });
@@ -61,7 +55,7 @@ describe("🧪 Test des routes Tickets", () => {
     });
   
     it("✅ Récupération des tickets de l'utilisateur", async () => {
-      const res = await api
+      const res = await global.api
         .get("/api/tickets/mine")
         .set("Authorization", `Bearer ${userToken}`);
   
@@ -70,7 +64,7 @@ describe("🧪 Test des routes Tickets", () => {
     });
   
     it("✅ Récupération des tickets d'un événement", async () => {
-      const res = await api
+      const res = await global.api
         .get(`/api/tickets/event/${eventId}`)
         .set("Authorization", `Bearer ${eventCreatorToken}`);
   
@@ -79,7 +73,7 @@ describe("🧪 Test des routes Tickets", () => {
     });
   
     it("❌ Accès refusé pour récupérer tous les tickets sans être admin", async () => {
-      const res = await api
+      const res = await global.api
         .get("/api/tickets/all")
         .set("Authorization", `Bearer ${userToken}`);
   
@@ -87,7 +81,7 @@ describe("🧪 Test des routes Tickets", () => {
     });
   
     it("✅ Accès autorisé pour récupérer tous les tickets (admin)", async () => {
-      const res = await api
+      const res = await global.api
         .get("/api/tickets/all")
         .set("Authorization", `Bearer ${adminToken}`);
   

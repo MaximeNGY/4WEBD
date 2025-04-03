@@ -1,9 +1,6 @@
-import supertest from 'supertest';
-import app from '../server.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
-let api;
 let adminToken;
 let eventCreatorToken;
 let eventId;
@@ -22,23 +19,20 @@ beforeAll(async () => {
   // Récupérer les tokens d'authentification
   adminToken = jwt.sign({ id: admin._id, role: admin.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
   eventCreatorToken = jwt.sign({ id: eventCreator._id, role: eventCreator.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-  // Lancer le serveur de test
-  api = supertest(app);
 });
 
 describe("Test Event Routes", () => {
 
   // Test pour la route GET /api/events
   it("should get all events", async () => {
-    const res = await api.get("/api/events");
+    const res = await global.api.get("/api/events");
     expect(res.statusCode).toBe(200);
     expect(res.body).toBeInstanceOf(Array);
   });
 
   // Test pour la route POST /api/events (création d'événement) en tant qu'eventCreator
   it("should create an event (as eventCreator)", async () => {
-    const res = await api
+    const res = await global.api
       .post("/api/events")
       .set("Authorization", `Bearer ${eventCreatorToken}`)
       .send({
@@ -58,7 +52,7 @@ describe("Test Event Routes", () => {
 
   // Test pour la route PUT /api/events/:id (mise à jour d'événement) en tant qu'eventCreator
   it("should update an event (as eventCreator)", async () => {
-    const res = await api
+    const res = await global.api
       .put(`/api/events/${eventId}`)
       .set("Authorization", `Bearer ${eventCreatorToken}`)
       .send({
@@ -74,7 +68,7 @@ describe("Test Event Routes", () => {
 
   // Test pour la route DELETE /api/events/:id (suppression d'événement) en tant qu'admin
   it("should delete an event (as admin)", async () => {
-    const res = await api
+    const res = await global.api
       .delete(`/api/events/${eventId}`)
       .set("Authorization", `Bearer ${adminToken}`);
 
