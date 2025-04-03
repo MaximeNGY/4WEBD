@@ -2,17 +2,15 @@
 import { connect } from 'mongoose';
 import User from '../models/User.js';
 import Event from '../models/Event.js';
-import dotenv from 'dotenv';
 import Ticket from '../models/Ticket.js';
 
 export default async () => {
 
-  dotenv.config();
   process.env.NODE_ENV = 'test';
 
   
   // Connexion à la base de données de test
-  const mongoUri = 'mongodb://localhost:27017/test_database';
+  const mongoUri = process.env.MONGO_URI;
   await connect(mongoUri);
   
   const existingUser = await User.findOne({ email: 'user@test.com' });

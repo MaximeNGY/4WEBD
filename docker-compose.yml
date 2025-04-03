@@ -15,14 +15,14 @@ services:
       - backend_network
     ports:
     - "3000:3000"
-    command: bash -c "npm install && npm run dev"
+    command: bash -c "npm install && node scripts/initData.js && npm start"
 
   backend2:
     build: .
     container_name: backend2
     environment:
-      MONGO_URI: mongodb://mongo:27017/concertdb
-      JWT_SECRET: "super_secret_key"
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - ./logs:/usr/src/app/logs
     depends_on:
@@ -31,7 +31,7 @@ services:
       - backend_network
     ports:
     - "3001:3000"
-    command: bash -c "npm install && npm run dev" 
+    command: bash -c "npm install && node scripts/initData.js && npm start" 
 
   nginx:
     image: nginx:latest

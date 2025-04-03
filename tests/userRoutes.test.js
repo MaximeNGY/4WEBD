@@ -55,7 +55,9 @@ describe("Users API", () => {
     });
   
     test("✅ Devrait créer un nouvel utilisateur", async () => {
-      const res = await global.api.post("/api/users/").send({
+      const res = await global.api.post("/api/users/")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
         email: "newuser@test.com",
         pseudo: "NewUser",
         password: "password123",

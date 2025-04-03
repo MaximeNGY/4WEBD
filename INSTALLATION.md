@@ -17,7 +17,7 @@ cd 4WEBD
 
 ```JSON
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/concertdb
+MONGO_URI=mongodb://mongo:27017/concertdb
 JWT_SECRET=super_secret_key
 NODE_ENV=dev
 ```

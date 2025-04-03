@@ -19,5 +19,11 @@ EXPOSE 5000
 # Créer un volume pour les logs
 VOLUME /usr/src/app/logs
 
+# Copie du script d'initialisation
+COPY scripts/initData.js /app/scripts/initData.js
+
+# Exécuter le script d'initialisation
+RUN node /app/scripts/initData.js
+
 # Commande pour démarrer l'application
 CMD ["npm", "start"]

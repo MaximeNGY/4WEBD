@@ -80,7 +80,7 @@ router.get("/me", authMiddleware, getMe);
  * @swagger
  * /api/users/:
  *   post:
- *     summary: Créer un nouvel utilisateur
+ *     summary: Créer un nouvel utilisateur (admin uniquement)
  *     tags: [Users]
  *     requestBody:
  *       required: true

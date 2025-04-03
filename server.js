@@ -3,6 +3,7 @@ import swaggerSetup from "./swaggerConfig.js";
 import dotenv from 'dotenv';
 import logger from "./config/logger.js";
 import connectDB from './config/db.js';
+import { checkDBConnection } from './config/db.js';
 
 // Importer et utiliser les routes
 import eventRoutes from "./routes/events.js";
@@ -21,6 +22,14 @@ app.use(express.json()); // Middleware pour parser le JSON
 
 // Configuration Swagger
 swaggerSetup(app);
+
+app.use((req, res, next) => {
+  if (!checkDBConnection()) {
+    logger.error('🚨 Tentative d\'accès à l\'API sans connexion DB');
+    return res.status(503).json({ message: "Base de données non disponible" });
+  }
+  next();
+});
 
 // Route de test
 app.get("/", (req, res) => {
