@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import logger from "./config/logger.js";
 import connectDB from './config/db.js';
 import { checkDBConnection } from './config/db.js';
+import cors from "cors";
 
 // Importer et utiliser les routes
 import eventRoutes from "./routes/events.js";
@@ -36,6 +37,11 @@ app.get("/", (req, res) => {
   res.send("🚀 API en ligne !");
 });
 
+app.use(cors({
+  origin: "http:localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // Routes
 app.use("/api/events", eventRoutes);

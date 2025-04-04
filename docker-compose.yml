@@ -8,14 +8,19 @@ services:
       MONGO_URI: ${MONGO_URI}
       JWT_SECRET: ${JWT_SECRET}
     volumes:
-      - ./logs:/usr/src/app/logs
-    depends_on:
-      - mongo
+      - ./logs:/app/logs
     networks:
       - backend_network
     ports:
-    - "3000:3000"
-    command: bash -c "npm install && node scripts/initData.js && npm start"
+      - "3000:3000"
+    command: >
+      bash -c "npm install &&
+      until nc -z mongo 27017; do sleep 2; echo 'En attente de MongoDB...'; done &&
+      node scripts/initData.js &&
+      npm start"
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   backend2:
     build: .
@@ -23,15 +28,17 @@ services:
     environment:
       MONGO_URI: ${MONGO_URI}
       JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: development
     volumes:
-      - ./logs:/usr/src/app/logs
-    depends_on:
-      - mongo
+      - ./logs:/app/logs
     networks:
       - backend_network
     ports:
-    - "3001:3000"
-    command: bash -c "npm install && node scripts/initData.js && npm start" 
+      - "3001:3000"
+    command: npm start
+    depends_on:
+      - mongo
+      - backend1
 
   nginx:
     image: nginx:latest
@@ -50,15 +57,24 @@ services:
     image: mongo:latest
     container_name: mongo
     restart: always
-    ports:
-      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
     volumes:
-      - ./data:/data/db
+      - mongo_data:/data/db
     networks:
       - backend_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+    ports:
+      - "27017:27017"
 
 volumes:
   mongo_data:
+    driver: local
 
 networks:
   backend_network:

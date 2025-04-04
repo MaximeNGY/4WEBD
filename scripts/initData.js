@@ -26,6 +26,7 @@ const initializeDatabase = async () => {
         pseudo: "AdminPseudo"
       });
       await newAdmin.save();
+      console.log("Hash généré pour admin:", hashedPasswordAdmin);
       console.log("Utilisateur admin créé.");
     }
 
