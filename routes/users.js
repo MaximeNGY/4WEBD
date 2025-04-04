@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware, verifyRole } from "../middlewares/auth.js";
-import { getUsers, getMe, createUser } from "../controllers/usersController.js";
+import { getUsers, getMe, createUser, deleteUser } from "../controllers/usersController.js";
 
 const router = Router();
 
@@ -131,5 +131,46 @@ router.get("/me", authMiddleware, getMe);
  *         description: Erreur de validation des données
  */
 router.post("/", verifyRole("admin"), createUser);
+
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   delete:
+ *     summary: Supprime un utilisateur par son ID (admin uniquement)
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de l'utilisateur à supprimer
+ *         schema:
+ *           type: string
+ *           example: "6613f45fd862e6e2e1bc1234"
+ *     responses:
+ *       200:
+ *         description: Utilisateur supprimé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Utilisateur supprimé avec succès"
+ *       404:
+ *         description: Utilisateur non trouvé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Utilisateur non trouvé"
+ *       500:
+ *         description: Erreur serveur
+ */
+router.delete("/:id", verifyRole("admin"), deleteUser);
 
 export default router;

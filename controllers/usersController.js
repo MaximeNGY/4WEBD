@@ -1,3 +1,4 @@
+import logger from "../config/logger.js";
 import User from "../models/User.js";
 
 /**
@@ -37,5 +38,24 @@ export const createUser = async (req, res) => {
     res.status(201).json(newUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
+    logger.error(`Erreur création utilisateur : ${error}`);
+  }
+};
+
+
+/**
+ * Supprime un utilisateur par son ID (Admin uniquement)
+ */
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    res.json({ message: "Utilisateur supprimé avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
