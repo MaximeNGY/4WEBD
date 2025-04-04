@@ -17,7 +17,7 @@ cd 4WEBD
 
 ```JSON
 PORT=5000
-MONGO_URI=mongodb://mongo:27017/concertdb
+MONGO_URI=mongodb://root:rootpassword@mongo:27017/concertdb?authSource=admin
 JWT_SECRET=super_secret_key
 NODE_ENV=dev
 ```
@@ -27,6 +27,13 @@ NODE_ENV=dev
 docker-compose up --build -d
 ```
 
+Si tu veux te login en tant qu'administrateur, voici les credentials:
+```JSON
+{
+  "email": "admin@test.com",
+  "password": "admin123"
+}
+```
 
 ---
 Si tu veux stopper et supprimer les conteneurs :
